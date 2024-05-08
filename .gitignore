@@ -1,0 +1,26 @@
+# Compiled class files
+*.class
+
+# Log files
+*.log
+
+# Package files
+*.jar
+
+# Maven build directory
+/target/
+
+# IntelliJ IDEA project files
+.idea/
+
+# Eclipse project files
+.classpath
+.project
+.settings/
+
+# Operating System files
+.DS_Store
+Thumbs.db
+
+# Ignore HTML files
+*.html
