@@ -4,6 +4,7 @@ import LogGenerator.Configuration.ConfigProperties;
 import FileWriter.FileWriterFactory;
 import FileWriter.FileWriterStrategy;
 import LogGenerator.LogWriter;
+import ch.qos.logback.classic.Level;
 import org.apache.kafka.clients.consumer.ConsumerConfig;
 
 import org.apache.kafka.clients.consumer.ConsumerRecord;
@@ -117,6 +118,33 @@ public class ConsumerClient implements Runnable {
     }
 
     /**
+     * Prints the memory usage of the Java application at the specified phase.
+     *
+     * This method performs the following steps:
+     * <ul>
+     *   <li>Invokes the garbage collector to minimize unreferenced objects.</li>
+     *   <li>Retrieves the total memory available to the JVM.</li>
+     *   <li>Retrieves the free memory available in the JVM.</li>
+     *   <li>Calculates the used memory by subtracting the free memory from the total memory.</li>
+     *   <li>Prints the memory usage information in megabytes (MB).</li>
+     * </ul>
+     */
+    private static void printMemory(){
+        Runtime runtime = Runtime.getRuntime();
+        runtime.gc();
+
+        long totalMemory = runtime.totalMemory();
+        long freeMemory = runtime.freeMemory();
+        long usedMemory = totalMemory - freeMemory;
+
+        // writes memory info in the log
+        logWriter.writeLog("Total Memory: " + totalMemory / (1024 * 1024) + " MB", Level.INFO);
+        logWriter.writeLog("Free Memory: " + freeMemory / (1024 * 1024) + " MB", Level.INFO);
+        logWriter.writeLog("Used Memory: " + usedMemory / (1024 * 1024) + " MB", Level.INFO);
+
+    }
+
+    /**
      * Writes the given list of messages to a file using the appropriate file writer strategy.
      *
      * This method synchronizes access to ensure thread safety when writing to the file.
@@ -154,10 +182,12 @@ public class ConsumerClient implements Runnable {
      * @param args The command-line arguments passed to the program (not used).
      */
     public static void main(String[] args) {
+
         ConsumerClient consumerClient = new ConsumerClient();
         int numofThreads = ConfigProperties.noOfThreads;
         ExecutorService executor = Executors.newFixedThreadPool(numofThreads);
 
+        // Start all the threads
         for (int i = 0; i < numofThreads; i++) {
             executor.submit(consumerClient);
         }

@@ -80,4 +80,41 @@ public class LogWriter {
         logger.error(msg);
 
     }
+
+    /**
+     * Writes a log message with the specified level.
+     *
+     * @param msg   The message to be logged.
+     * @param level The level at which the message should be logged.
+     *              Supported levels are:
+     *              <ul>
+     *                <li>{@link ch.qos.logback.classic.Level#TRACE}</li>
+     *                <li>{@link ch.qos.logback.classic.Level#DEBUG}</li>
+     *                <li>{@link ch.qos.logback.classic.Level#INFO}</li>
+     *                <li>{@link ch.qos.logback.classic.Level#WARN}</li>
+     *                <li>{@link ch.qos.logback.classic.Level#ERROR}</li>
+     *              </ul>
+     */
+    public static void writeLog(String msg, Level level) {
+        switch (level.levelInt) {
+            case Level.TRACE_INT:
+                logger.trace(msg);
+                break;
+            case Level.DEBUG_INT:
+                logger.debug(msg);
+                break;
+            case Level.INFO_INT:
+                logger.info(msg);
+                break;
+            case Level.WARN_INT:
+                logger.warn(msg);
+                break;
+            case Level.ERROR_INT:
+                logger.error(msg);
+                break;
+            default:
+                logger.info(msg);
+                break;
+        }
+    }
 }
